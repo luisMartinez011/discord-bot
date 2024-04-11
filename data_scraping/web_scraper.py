@@ -1,14 +1,15 @@
-import requests
+from botocore.vendored import requests
+import time
 from bs4 import BeautifulSoup
 
 class WebScraper():
 
-    def __init__(self, url, news_source):
+    def __init__(self, url, news_source, sport):
         self.url = url
         self.news_source = news_source
+        self.sport = sport
 
     def fetch_html(self):
-
         url = self.url
         header = {'User-Agent': 'Mozilla/5.0'}
 
@@ -19,6 +20,8 @@ class WebScraper():
             return response
         except requests.exceptions.RequestException as e:
             print(f'Error: {e}')
+        finally:
+            time.sleep(1)
 
     # def analyze_html(self, html):
     #     raise NotImplementedError("Subclasses must implement analyze_html method")
