@@ -80,8 +80,8 @@ async def on_message(message):
 
         await message.channel.send('Configuración enviada al backend.')
 
-# Token de autenticación del bot de Discord
-token = 'MTIyODE0OTU5Mzk1OTU2NzM4MQ.Gmds72.v66ap-KUjMO-pi0KisU0Q1C3AQolwA4ufBd6ac'
+# Token de autenticación del bot de Discord   se ocupa generar un token en https://discord.com/developers/applications
+token = ''
 
 # Inicia el bot de Discord
 client.run(token)
