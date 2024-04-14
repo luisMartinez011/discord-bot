@@ -10,7 +10,6 @@ def lambda_handler(event, context):
 
     news_df = pd.DataFrame(columns=['title', 'description', 'link', 'image','news source', 'sport'])
 
-    print(news_df)
 
     ###As
     news_source = "As"
@@ -26,6 +25,8 @@ def lambda_handler(event, context):
         web_scrapper = AsScrapper(url, news_source, sport)
         html = web_scrapper.fetch_html()
         arr = web_scrapper.analyze_html(html)
+        if arr.empty:
+            raise ValueError("No news collected")
         news_df= pd.concat([arr, news_df], ignore_index=True)
 
     # Fansided
@@ -43,6 +44,8 @@ def lambda_handler(event, context):
         web_scrapper = FansidedScrapper(url, news_source, sport)
         html = web_scrapper.fetch_html()
         arr = web_scrapper.analyze_html(html)
+        if arr.empty:
+            raise ValueError("No news collected")
         news_df= pd.concat([arr, news_df], ignore_index=True)
 
     ##Espn
@@ -59,6 +62,8 @@ def lambda_handler(event, context):
         web_scrapper = EspnScrapper(url, news_source, sport)
         html = web_scrapper.fetch_html()
         arr = web_scrapper.analyze_html(html)
+        if arr.empty:
+            raise ValueError("No news collected")
         news_df= pd.concat([arr, news_df], ignore_index=True)
 
     json_data = news_df.to_json()
@@ -73,4 +78,4 @@ def lambda_handler(event, context):
         Key= 'dataframe_noticias_' + str(datetime.now()) + '.json',
         Body=json_data
     )
-    print(news_df)
+    print("Execution succcessfully completed")

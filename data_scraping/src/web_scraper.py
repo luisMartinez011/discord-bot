@@ -55,10 +55,9 @@ class WebScraper():
         """
 
         soup = BeautifulSoup(html, 'html.parser')
-        # print(soup.prettify())
 
         p_tags = soup.find(id='h1-title ohayo')
-        print(p_tags)
+        print(p_tags.prettify())
 
 
 

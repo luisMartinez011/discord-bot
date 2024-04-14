@@ -10,29 +10,48 @@ class EspnScrapper(WebScraper):
 
         noticias = []
         section = soup.find(attrs={'id':'news-feed'})
-        for row in section.find('section').find_all('section'):
 
-            content_item = row.find(class_='contentItem__titleWrapper')
-            if(
-                content_item is not None
-                and (content_item.find('h2') is not None)
-                and (content_item.find('p') is not None)
-                and (row.find('img') is not None)
-               ):
-                title = content_item.find('h2').get_text()
-                description =  content_item.find('p').get_text()
-                image = row.find('img')['data-default-src']
-                link = "https://www.espn.com.mx" + row.find('a')['href']
-                print(link)
-                noticias.append([title,description, image, link, self.news_source, self.sport])
+        if(self.sport == 'Basquetbol'):
+            for row in section.find_all('article'):
+                content_item = row.find(class_='contentItem__titleWrapper')
+                if(
+                    content_item is not None
+                    and (content_item.find('h2') is not None)
+                    and (content_item.find('p') is not None)
+                    and (row.find('source') is not None)
+                ):
+                    title = content_item.find('h2').get_text()
+                    description =  content_item.find('p').get_text()
+                    image = row.find('source')['data-srcset']
+                    link = "https://www.espn.com.mx" + row.find('a')['href']
+                    # print(image)
+                    noticias.append([title,description, image, link, self.news_source, self.sport])
+
+        else:
+            for row in section.find('section').find_all('section'):
+
+                content_item = row.find(class_='contentItem__titleWrapper')
+                if(
+                    content_item is not None
+                    and (content_item.find('h2') is not None)
+                    and (content_item.find('p') is not None)
+                    and (row.find('img') is not None)
+                ):
+                    title = content_item.find('h2').get_text()
+                    description =  content_item.find('p').get_text()
+                    image = row.find('img')['data-default-src']
+                    link = "https://www.espn.com.mx" + row.find('a')['href']
+
+                    noticias.append([title,description, image, link, self.news_source, self.sport])
+
 
         df = pd.DataFrame(noticias, columns=['title', 'description', 'link', 'image','news source', 'sport'])
         return df
 
 # urls = {
-#     'Futbol': "https://www.espn.com.mx/futbol/",
+#     # 'Futbol': "https://www.espn.com.mx/futbol/",
 #     'Basquetbol': "https://www.espn.com.mx/basquetbol/",
-#     'Beisbol': "https://www.espn.com.mx/beisbol/"
+#     # 'Beisbol': "https://www.espn.com.mx/beisbol/"
 # }
 
 # news_source = "Espn"
