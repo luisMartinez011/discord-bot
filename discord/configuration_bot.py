@@ -6,23 +6,24 @@ import os
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 
+mensaje_inicial_enviado = False
+
 @client.event
 async def on_ready():
     #Mensaje de bienvenida
     print('Bot conectado como {0.user}'.format(client))
 
-
-
-
 @client.event
 async def on_message(message):
+    global mensaje_inicial_enviado
     # Verifica que el mensaje provenga de un usuario y no del bot
     if message.author == client.user:
         return 
     
         # Verifica si el mensaje fue enviado en el canal "noticias-deportivas"
-    if str(message.channel) == "noticias-deportivas":
+    if str(message.channel) == "noticias-deportivas" and not mensaje_inicial_enviado:
         await message.channel.send(f'¡Hola {message.author.display_name}! Para configurar tus preferencias deportivas, usa el comando !configurar.')
+        mensaje_inicial_enviado = True
 
     # Verifica si el mensaje es el comando de configuración inicial
     if message.content.startswith('!configurar'):
@@ -72,7 +73,7 @@ async def on_message(message):
             await message.channel.send('¿Con qué frecuencia deseas recibir noticias? (diario/semanal/mensual)')
             respuesta_frecuencia = await client.wait_for('message', check=lambda m: m.author == message.author)
             frecuencia = respuesta_frecuencia.content.lower()
-            
+        
         # diccionario con la configuración
         configuracion = {
             'deporte': deporte,
@@ -88,6 +89,9 @@ async def on_message(message):
 
 
         await message.channel.send('¡Gracias! Tus preferencias han sido guardadas exitosamente. Aquí están tus preferencias:\n\nDeporte: {}\nFuente: {}\nFrecuencia: {}'.format(configuracion['deporte'], configuracion['fuente'], configuracion['frecuencia']))
+
+        mensaje_inicial_enviado = False
+        
 
 # Token de autenticación del bot de Discord   se ocupa generar un token en https://discord.com/developers/applications
 # y usarala como variable de entorno
