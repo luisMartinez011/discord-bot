@@ -22,7 +22,7 @@ async def on_message(message):
     
         # Verifica si el mensaje fue enviado en el canal "noticias-deportivas"
     if str(message.channel) == "noticias-deportivas":
-        await message.channel.send(f'¡Hola {message.author.name}! Para configurar tus preferencias deportivas, usa el comando !configurar.')
+        await message.channel.send(f'¡Hola {message.author.display_name}! Para configurar tus preferencias deportivas, usa el comando !configurar.')
 
     # Verifica si el mensaje es el comando de configuración inicial
     if message.content.startswith('!configurar'):
