@@ -17,9 +17,9 @@ def lambda_handler(event, context):
     ###As
     news_source = "As"
     urls = {
-        # 'Futbol': "https://mexico.as.com/futbol/?omnil=mpal",
+        'Futbol': "https://mexico.as.com/futbol/?omnil=mpal",
         'Basquetbol': "https://mexico.as.com/noticias/nba/",
-        # 'Beisbol': "https://mexico.as.com/noticias/beisbol"
+        'Beisbol': "https://mexico.as.com/noticias/beisbol"
     }
 
 
@@ -35,39 +35,39 @@ def lambda_handler(event, context):
     # Fansided
     news_source = "Fansided"
 
-    # urls = {
-    #     'Futbol': "https://fansided.com/es/leagues/futbol",
-    #     'Basquetbol': "https://fansided.com/es/leagues/nba",
-    #     'Beisbol': "https://fansided.com/es/leagues/mlb"
-    # }
+    urls = {
+        'Futbol': "https://fansided.com/es/leagues/futbol",
+        'Basquetbol': "https://fansided.com/es/leagues/nba",
+        'Beisbol': "https://fansided.com/es/leagues/mlb"
+    }
 
 
-    # for sport, url in urls.items():
+    for sport, url in urls.items():
 
-    #     web_scrapper = FansidedScrapper(url, news_source, sport)
-    #     html = web_scrapper.fetch_html()
-    #     arr = web_scrapper.analyze_html(html)
-    #     if arr.empty:
-    #         raise ValueError("No news collected")
-    #     news_df= pd.concat([arr, news_df], ignore_index=True)
+        web_scrapper = FansidedScrapper(url, news_source, sport)
+        html = web_scrapper.fetch_html()
+        arr = web_scrapper.analyze_html(html)
+        if arr.empty:
+            raise ValueError("No news collected")
+        news_df= pd.concat([arr, news_df], ignore_index=True)
 
-    # ##Espn
-    # news_source = "Espn"
-    # urls = {
-    #     'Futbol': "https://www.espn.com.mx/futbol/",
-    #     'Basquetbol': "https://www.espn.com.mx/basquetbol/",
-    #     'Beisbol': "https://www.espn.com.mx/beisbol/"
-    # }
+    ##Espn
+    news_source = "Espn"
+    urls = {
+        'Futbol': "https://www.espn.com.mx/futbol/",
+        'Basquetbol': "https://www.espn.com.mx/basquetbol/",
+        'Beisbol': "https://www.espn.com.mx/beisbol/"
+    }
 
 
-    # for sport, url in urls.items():
+    for sport, url in urls.items():
 
-    #     web_scrapper = EspnScrapper(url, news_source, sport)
-    #     html = web_scrapper.fetch_html()
-    #     arr = web_scrapper.analyze_html(html)
-    #     if arr.empty:
-    #         raise ValueError("No news collected")
-    #     news_df= pd.concat([arr, news_df], ignore_index=True)
+        web_scrapper = EspnScrapper(url, news_source, sport)
+        html = web_scrapper.fetch_html()
+        arr = web_scrapper.analyze_html(html)
+        if arr.empty:
+            raise ValueError("No news collected")
+        news_df= pd.concat([arr, news_df], ignore_index=True)
 
     json_data = news_df.to_json()
 

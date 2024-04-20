@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import boto3
 import time
 from boto3.dynamodb.conditions import Key,Attr
+import json
 
 class TaskScheduler():
 
@@ -51,6 +52,7 @@ class TaskScheduler():
             }
         )
 
+    # TODO: Eliminar esta funcion al final por si no se usa
     def return_latest_configuration(self):
         dynamodb = self.dynamodb
 
@@ -65,6 +67,11 @@ class TaskScheduler():
         print(response['Items'])
 
 def lambda_handler(event, context):
+    body =json.loads(event.get("body"))
+    fuente = body["fuente"]
+    deporte = body["deporte"]
+    frecuencia = body["frecuencia"]
+    nombre_server = body["nombre_server"]
 
-    taskScheduler = TaskScheduler('DSJFJF0')
+    taskScheduler = TaskScheduler(fuente, deporte , frecuencia, nombre_server)
     taskScheduler.upload_to_database()

@@ -35,7 +35,7 @@ EOT
 }
 
 data "aws_ecr_repository" "automatizacion-image" {
-  name = "automatizacion-discord-image"
+  name = "automatizacion-discord-datasets-image"
 }
 
 resource "aws_iam_role" "lambda_role" {
