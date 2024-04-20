@@ -1,9 +1,12 @@
 import discord
 import json
+import os
 
 # Crea un cliente de Discord
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
+
+mensaje_inicial_enviado = False
 
 @client.event
 async def on_ready():
@@ -12,9 +15,15 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global mensaje_inicial_enviado
     # Verifica que el mensaje provenga de un usuario y no del bot
     if message.author == client.user:
         return 
+    
+        # Verifica si el mensaje fue enviado en el canal "noticias-deportivas"
+    if str(message.channel) == "noticias-deportivas" and not mensaje_inicial_enviado:
+        await message.channel.send(f'¡Hola {message.author.display_name}! Para configurar tus preferencias deportivas, usa el comando !configurar.')
+        mensaje_inicial_enviado = True
 
     # Verifica si el mensaje es el comando de configuración inicial
     if message.content.startswith('!configurar'):
@@ -64,24 +73,28 @@ async def on_message(message):
             await message.channel.send('¿Con qué frecuencia deseas recibir noticias? (diario/semanal/mensual)')
             respuesta_frecuencia = await client.wait_for('message', check=lambda m: m.author == message.author)
             frecuencia = respuesta_frecuencia.content.lower()
-            
-        # Crea un diccionario con la configuración
+        
+        # diccionario con la configuración
         configuracion = {
             'deporte': deporte,
             'fuente': fuente,
             'frecuencia': frecuencia
         }
 
-        # Convierte la configuración a formato JSON
+        # configuración a formato JSON
         configuracion_json = json.dumps(configuracion)
         print(configuracion_json)
-        # Envía la configuración al backend
-        #TODO Aquí debes agregar el código para enviar la configuración al backend
 
-        await message.channel.send('Configuración enviada al backend.')
+        #TODO  Envía la configuración al backend
+
+
+        await message.channel.send('¡Gracias! Tus preferencias han sido guardadas exitosamente. Aquí están tus preferencias:\n\nDeporte: {}\nFuente: {}\nFrecuencia: {}'.format(configuracion['deporte'], configuracion['fuente'], configuracion['frecuencia']))
+
+        mensaje_inicial_enviado = False
+        
 
 # Token de autenticación del bot de Discord   se ocupa generar un token en https://discord.com/developers/applications
-token = ''
-
+# y usarala como variable de entorno
+token = os.getenv('DISCORD_TOKEN')
 # Inicia el bot de Discord
 client.run(token)
