@@ -48,11 +48,6 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
   policy_arn = aws_iam_policy.s3_policy.arn
 }
 
-# data "archive_file" "python_lambda_package" {
-#   type        = "zip"
-#   source_dir  = "${path.module}/../data_scraping"
-#   output_path = "data_scraping.zip"
-# }
 
 resource "aws_lambda_function" "test_lambda_function" {
   function_name = "automatizacion-discord-lambda"
@@ -60,6 +55,6 @@ resource "aws_lambda_function" "test_lambda_function" {
   image_uri     = "${data.aws_ecr_repository.automatizacion-image.repository_url}:latest"
   package_type  = "Image"
   role          = aws_iam_role.lambda_role.arn
-  runtime       = "python3.10"
+  # runtime       = "python3.10"
   # handler       = "main.lambda_handler"
 }
