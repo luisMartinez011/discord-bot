@@ -13,6 +13,18 @@ async def on_ready():
     #Mensaje de bienvenida
     print('Bot conectado como {0.user}'.format(client))
 
+    
+bienvenida = f"soy SBotNews\nMe ecargare de mantenerte informado sobre las nuevas actualizaciones en tus preferencias deportivas, solo hagamos algunas configuraciones antes, escribe ok para continuar"
+
+@client.event
+async def on_member_join(member):
+    global bienvenida
+    canal_bienvenida = discord.utils.get(member.guild.channels, name='noticias-deportivas')
+    welcome_message = f"Hola {member.mention}, {bienvenida}"
+    await canal_bienvenida.send(welcome_message)
+
+
+
 @client.event
 async def on_message(message):
     global mensaje_inicial_enviado
@@ -81,15 +93,99 @@ async def on_message(message):
             'frecuencia': frecuencia
         }
 
+
+        
+
         # configuración a formato JSON
         configuracion_json = json.dumps(configuracion)
         print(configuracion_json)
 
         #TODO  Envía la configuración al backend
 
-
+        
         await message.channel.send('¡Gracias! Tus preferencias han sido guardadas exitosamente. Aquí están tus preferencias:\n\nDeporte: {}\nFuente: {}\nFrecuencia: {}'.format(configuracion['deporte'], configuracion['fuente'], configuracion['frecuencia']))
 
+        # region IMPRIMIR NOTICIAS EN CHAT
+        try:
+            with open('datos.json', 'r') as archivo_json:
+                datos = json.load(archivo_json)
+    
+            for titulo, descripcion, fuente, deporte, link in zip(datos["title"].values(), datos["description"].values(), datos["news source"].values(), datos["sport"].values(), datos["link"].values()):
+                if deporte.lower() == bot_config['deporte']:
+                    if fuente.lower() == bot_config['fuente']:
+                        mensaje = (
+                            "\n ESTAS SON TUS NOTICIAS DE HOY \n"
+                            f"Título: {titulo}\n"
+                            f"Descripción: {descripcion}\n"
+                            f"Fuente de noticias: {fuente}\n"
+                            f"Deporte: {deporte}\n"
+                            f"{link}\n"
+                            "------------------------------------"
+                        )
+                        await enviar_mensaje_discord(mensaje)
+                    elif bot_config['fuente'] == "todas":
+                        mensaje = (
+                            "\n ESTAS SON TUS NOTICIAS DE HOY \n"
+                            f"Título: {titulo}\n"
+                            f"Descripción: {descripcion}\n"
+                            f"Fuente de noticias: {fuente}\n"
+                            f"Deporte: {deporte}\n"
+                            f"{link}\n"
+                            "------------------------------------"
+                        )
+                        await enviar_mensaje_discord(mensaje)
+                elif bot_config['deporte'] == "general":
+                    mensaje = (
+                        "\n ESTAS SON TUS NOTICIAS DE HOY \n"
+                        f"Título: {titulo}\n"
+                        f"Descripción: {descripcion}\n"
+                        f"Fuente de noticias: {fuente}\n"
+                        f"Deporte: {deporte}\n"
+                        f"{link}\n"
+                        "------------------------------------"
+                    )
+                    await enviar_mensaje_discord(mensaje)
+                    if fuente.lower() == bot_config['fuente']:
+                        mensaje = (
+                            "\n ESTAS SON TUS NOTICIAS DE HOY \n"
+                            f"Título: {titulo}\n"
+                            f"Descripción: {descripcion}\n"
+                            f"Fuente de noticias: {fuente}\n"
+                            f"Deporte: {deporte}\n"
+                            f"{link}\n"
+                            "------------------------------------"
+                        )
+                        await enviar_mensaje_discord(mensaje)
+                    elif bot_config['fuente'] == "todas":
+                        mensaje = (
+                            "\n ESTAS SON TUS NOTICIAS DE HOY \n"
+                            f"Título: {titulo}\n"
+                            f"Descripción: {descripcion}\n"
+                            f"Fuente de noticias: {fuente}\n"
+                            f"Deporte: {deporte}\n"
+                            f"{link}\n"
+                            "------------------------------------"
+                        )
+                        await enviar_mensaje_discord(mensaje)
+        except Exception as e:
+            print("Error al cargar el archivo JSON:", e)
+
+# Función para enviar mensaje a Discord
+@client.event
+async def enviar_mensaje_discord(mensaje):
+    channel = client.get_channel('ID DEL CANAL')
+    await chanel.send(mensaje)
+
+        #endregion
+
+
+
+
+
+
+
+
+        
         mensaje_inicial_enviado = False
         
 
