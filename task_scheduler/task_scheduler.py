@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import boto3
 import time
 from boto3.dynamodb.conditions import Key,Attr
+# from aws_cdk import aws_events, aws_events_targets
 import json
 
 class TaskScheduler():
@@ -36,7 +37,7 @@ class TaskScheduler():
         dynamodb = self.dynamodb
 
         table = dynamodb.Table(self.table_name)
-        TTL = datetime.now() + timedelta(minutes=self.frecuencia)
+        TTL = datetime.now() + timedelta(hours=self.frecuencia)
 
         TTL = int(time.mktime(TTL.timetuple()))
         table.put_item(
@@ -66,12 +67,14 @@ class TaskScheduler():
 
         print(response['Items'])
 
+
+
 def lambda_handler(event, context):
-    body =json.loads(event.get("body"))
-    fuente = body["fuente"]
-    deporte = body["deporte"]
-    frecuencia = body["frecuencia"]
-    nombre_server = body["nombre_server"]
+    body =json.loads(event['body'])
+    fuente = body["fuente"].capitalize()
+    deporte = body["deporte"].capitalize()
+    frecuencia = int(body["frecuencia"].capitalize())
+    nombre_server = body["nombre_server"].capitalize()
 
     taskScheduler = TaskScheduler(fuente, deporte , frecuencia, nombre_server)
     taskScheduler.upload_to_database()
