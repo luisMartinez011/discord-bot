@@ -27,7 +27,7 @@ class FansidedScrapper(WebScraper):
                 # print(link)
                 noticias.append([title,description, img2, link, self.news_source, self.sport])
 
-        df = pd.DataFrame(noticias, columns=['title', 'description', 'link', 'image','news source', 'sport'])
+        df = pd.DataFrame(noticias, columns=['title', 'description',  'image', 'link','news source', 'sport'])
         return df
 
 # urls = {

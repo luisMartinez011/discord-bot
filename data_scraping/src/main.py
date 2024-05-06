@@ -1,4 +1,3 @@
-### AS
 from as_scraper import AsScrapper
 from espn_scraper import EspnScrapper
 from fansided_scraper import FansidedScrapper
@@ -90,7 +89,6 @@ def lambda_handler(event, context):
 
         table.put_item(
             Item={
-                #Round about para que me funcione la cagada de DynamoDb
                 'dataset_id': '1',
                 'created_at': str(datetime.now()),
                 'file_name': file,

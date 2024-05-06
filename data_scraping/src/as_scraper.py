@@ -24,7 +24,7 @@ class AsScrapper(WebScraper):
                 link = row.find('article').find("h2").find("a")['href']
                 noticias.append([title,description, image, link, self.news_source, self.sport])
 
-        df = pd.DataFrame(noticias, columns=['title', 'description', 'link', 'image','news source', 'sport'])
+        df = pd.DataFrame(noticias, columns=['title', 'description',  'image','link','news source', 'sport'])
         return df
 
 # urls = {
